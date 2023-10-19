@@ -113,6 +113,19 @@ plt.tight_layout()
 plt.savefig('pictures/input_impulse_covolition.png')
 plt.show()
 
+# print question
+# Bonus is in here
+# BONUS
+print(f"From the plots, we can see that they display the commutativity and linearity properties. Linearity describes "
+      f"how that if you convolve a linear combination of two signals, it's the same as the linear combination of "
+      f"their convolutions. For commutativity, the convolution of f(t) with g(t) is the same as the convolution of g("
+      f"t) with f(t). BONUS: For signal processing, linearity is crucial, as many real worlds applications of signal "
+      f"processing, like circuitry for example, require that you know whether or not that system is linear to "
+      f"calculate certain outputs. All of our integrated circuits are non-linear. For commutativity, "
+      f"it is particularly important as it can enable us to make more efficient algorithms, like numpys, using this."
+      f"For a math perspective, they are both very important as they are related and required by a lot of other "
+      f"mathematical theories, like group theory and fourier analysis. ")
+
 # %% Part 2: Build a Convolution Function
 
 # first use module to get the convolved signal
@@ -126,6 +139,14 @@ plt.title('Convolution (Input * Impulse)')
 plt.xlabel('Time (s)')
 plt.ylabel('Amplitude (A.U.)')
 plt.show()
+# I use np.allclose and essentially make it so that they must be accurate to the 15th digit, so the same.
+comparison_result = np.allclose(my_convolved_signal, convolution_result1,rtol=1e15,atol=1e15)
+print(f"The comparison results is {comparison_result} for two reasons. The main reason is that they are both the same "
+      f"convolution of the same signal, and they will be the same if our convolution is correct and our functions are "
+      f"linear. The second reason, mainly for my comment above regarding the use of allclose, is that numpy uses c++ "
+      f"and other languages to make iteration a lot faster, and python handles float point values a bit different "
+      f"than c++.")
+# now we will compare arrays
 # %% Part 3: Simplify a Cascade System
 
 # declare variables

@@ -113,7 +113,7 @@ plt.tight_layout()
 
 # Save Figure
 
-plt.savefig('input_impulse_covolition.png')
+plt.savefig('pictures/input_impulse_covolition.png')
 plt.show()
 
 # %% Part 2: Build a Convolution Function
@@ -170,7 +170,7 @@ plt.ylabel('Drug Concentration')
 plt.legend()
 plt.show()
 plt.tight_layout()
-plt.savefig('drug_concentration.pdf')
+plt.savefig('pictures/drug_concentration.pdf')
 
 # %%
 '''
@@ -202,7 +202,7 @@ plt.xlabel("Time in seconds")
 plt.ylabel("Amplitude A.U.")
 plt.grid(visible=True)
 plt.autoscale(enable=True)
-plt.savefig("Mean_OMG_Data_vs_Time.png")
+plt.savefig("pictures/Mean_OMG_Data_vs_Time.png")
 plt.show()
 print(
     f"\n This graph looks a lot like the sound signature of the noise would be. It seems just like random sinusoidal "
@@ -243,6 +243,9 @@ hpf = np.loadtxt(file_path_hpf)
 # for loop, so it takes a lot less time. We got Adam's approval on this.
 omg_convolve_hpf = l2m.get_convolved_signal(hpf, mean_data_omg, 1)
 
+# save the convolution
+np.savetxt("data/highpassed.txt", omg_convolve_hpf)
+
 sd.play(omg_convolve_hpf * 10000000000, sample_rate_omg)
 sd.wait()
 print(f"This filter got rid of all lower frequencies, and essentially made the higher frequency noise louder")
@@ -256,6 +259,9 @@ lpf = np.loadtxt(file_path_lpf)
 
 # now convolve the highpass filter with the lowpass filter
 omg_convolve_lpf = l2m.get_convolved_signal(lpf, mean_data_omg, 1)
+
+# save the convolution
+np.savetxt("data/lowpassed.txt", omg_convolve_lpf)
 
 sd.play(omg_convolve_lpf * 1000000000, sample_rate_omg)
 sd.wait()
@@ -274,6 +280,8 @@ upper_lim = np.arange(0, 0.02, 0.0004)
 lower_lim = np.arange(0.02, 0, -0.0004)
 strange_filter = np.concatenate((upper_lim, lower_lim))
 omg_convolve_strange = l2m.get_convolved_signal(strange_filter, mean_data_omg, 1)
+# save the convolution
+np.savetxt("data/bandpassed.txt", omg_convolve_strange)
 
 sd.play(omg_convolve_strange * 10000000, sample_rate_omg)
 sd.wait()
@@ -292,6 +300,8 @@ h[0] = 1
 h[-1] = 1
 # we get the convolved signal
 omg_convolve_h = l2m.get_convolved_signal(mean_data_omg, h, 1)
+# save the convolution
+np.savetxt("data/hed.txt", omg_convolve_h)
 # now I am multipying it by a lot just so I can hear it
 sd.play(omg_convolve_h * 10000000, sample_rate_omg)
 sd.wait()
@@ -323,9 +333,11 @@ data_meow_chopped = data_meow_mean[num_samples_cutoff:num_samples_cutoff_end]
 
 # now we can convolve the two
 omg_convolve_meow = l2m.get_convolved_signal(data_meow_chopped, mean_data_omg, 1)
+
+# save the convolution
+np.savetxt("data/meowed.txt", omg_convolve_meow)
+
 # play the sound!!
-data_omg[:, 0] = omg_convolve_meow
-data_omg[:, 1] = omg_convolve_meow
 sd.play(data_omg * 10000000, sample_rate_meow)
 sd.wait()
 # insert print statement here

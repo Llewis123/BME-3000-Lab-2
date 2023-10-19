@@ -42,7 +42,7 @@ plt.plot(system_impulse)
 
 # Scale Input Signal
 
-input_signal_scaled = 2 * (input_signal)
+input_signal_scaled = 2 * input_signal
 
 plt.plot(input_signal_scaled)
 plt.show()
@@ -118,33 +118,59 @@ plt.show()
 
 # %% Part 2: Build a Convolution Function
 
-
-my_convolved_signal = l2m.get_convolved_signal(input_signal, system_impulse)
-
+# first use module to get the convolved signal
+# reminder that we use our optional variable, which we could set as nump=0 if the order
+# of the variables in the function was not obvious.
+my_convolved_signal = l2m.get_convolved_signal(input_signal, system_impulse, 0)
+# then just simply plot
+plt.figure(3)
 plt.plot(l2m.get_time_convolution(my_convolved_signal, dt), my_convolved_signal)
+plt.title('Convolution (Input * Impulse)')
+plt.xlabel('Time (s)')
+plt.ylabel('Amplitude (A.U.)')
 plt.show()
 # %% Part 3: Simplify a Cascade System
 
-drug_time = np.arange(start=0, stop=50, step=dt)
+# declare variables
+dt = 0.01
+drug_time = np.arange(0, 50 + dt, dt)
 
+# calculate drug dosage equation
 drug_dosage = 1 - np.cos(0.25 * np.pi * drug_time)
 
-h1 = np.array(0.25 * (np.exp(-drug_time / 0.4)) * drug_dosage)
+# create the arrays of each system transfer function
+h1 = np.array(0.25 * (np.exp(-drug_time / 4)) * drug_dosage)
+h2 = np.array(1 - np.cos(0.25 * np.pi * -drug_time))
+h3 = np.array(np.exp((-2 * (drug_time - 1) ** 2)))
 
-h2 = np.array((1 - np.cos(0.25 * np.pi * -drug_time)))
+drug_convolution1 = np.convolve(h1, h2)
 
-h3 = np.array(np.exp(-1 * 2 * (drug_time - 1) ** 2))
+body_impulse = np.convolve(drug_convolution1, h3)
 
-body_impulse = ((0.25 * (np.exp(-drug_time / 0.4)) * drug_dosage) +
+plt.figure(4)
+plt.title("Drug Concentration Response")
 
-                (1 - np.cos(0.25 * np.pi * -drug_time)) +
+# Testing Amplitudes
+test_amp = [0, 1, 2, 3]
 
-                (np.exp(-2 * (drug_time - 1) ** 2)))
+# Testing Denominators
+test_denom = [2, 4, 6]
 
-plt.figure(4, dpi=200)
+# for loop to iterate through denom and amplitudues to print and run
+# the drug simulation to them
+for denom in test_denom:
+    for amps in test_amp:
+        x_t = amps - np.cos(1 / denom * np.pi * drug_time)
+        label = f'denominator = {denom}, amplitude = {amps}'
+        l2m.run_drug_simulations(x_t, body_impulse, dt, label)
 
-# l2m.run_drug_simulations(input_signal, system_impulse, dt, label)
-
+# plot them
+plt.xlabel('Time (s)')
+plt.ylabel('Drug Concentration')
+plt.legend()
+plt.show()
+plt.tight_layout()
+plt.savefig('drug_concentration.pdf')
 
 # %%
 '''
@@ -179,7 +205,8 @@ plt.autoscale(enable=True)
 plt.savefig("Mean_OMG_Data_vs_Time.png")
 plt.show()
 print(
-    f"\n This graph looks a lot like the sound signature of the noise would be. It seems just like random sinusoidal waves, and at a high frequency.")
+    f"\n This graph looks a lot like the sound signature of the noise would be. It seems just like random sinusoidal "
+    f"waves, and at a high frequency.")
 
 # now play with a doubled sampling rate
 print(f"With a doubled sample rate, their will be less time, so signal will be compressed and much faster")
@@ -193,7 +220,8 @@ print(f"\n That is exactly what happened!")
 
 # now play with a halved sampling rate
 print(
-    f"\n With a halved sampling rate, the time will be scaled upwards by 2, increasing the length of signal and stretching it")
+    f"\n With a halved sampling rate, the time will be scaled upwards by 2, increasing the length of signal and "
+    f"stretching it")
 """
 sd.play(data_omg*2, sample_rate_omg*0.5)
 sd.wait()

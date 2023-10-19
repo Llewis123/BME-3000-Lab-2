@@ -12,13 +12,10 @@ manipulate and convolve sounds together.
 
 # %% Import Packages
 
-from matplotlib import pyplot as plt
-
 import numpy as np
-
-import soundfile as sf
-
 import sounddevice as sd
+import soundfile as sf
+from matplotlib import pyplot as plt
 
 import lab2_module as l2m
 
@@ -340,4 +337,9 @@ np.savetxt("data/meowed.txt", omg_convolve_meow)
 # play the sound!!
 sd.play(data_omg * 10000000, sample_rate_meow)
 sd.wait()
-# insert print statement here
+
+print(
+    f"I recorded the impulse response function of the room by picking up my cat while in my room and she meows a lot "
+    f"so she meowed. My cat meows alot so it is a great simulation. I"
+    f"used OBS to record & audacity to edit it. This changed the sound by giving it much more reverb, and adding what "
+    f"seems to be a lion roar where my cat meowed but it is very faint")
